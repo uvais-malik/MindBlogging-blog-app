@@ -13,7 +13,9 @@
 @theme {
   --color-primary: #5044E5;
 }
-
+.max-blur {
+  filter: blur(80px); /* Adjust px as desired */
+}
 .rich-text { font-size: 15px;  }
 
 .rich-text p { margin-bottom: 16px; color: #292929; }

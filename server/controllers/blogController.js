@@ -58,6 +58,9 @@ export const addBlog = async (req, res)=>{
 export const getAllBlogs = async (req, res)=>{
     try {
         const blogs = await Blog.find({isPublished: true})
+        // const blogs = await Blog.find()
+        // const blogs = await Blog.find().sort({ createdAt: -1 })
+
         res.json({
             success: true,
             blogs
