@@ -1,52 +1,46 @@
 import mongoose from "mongoose";
-
-// const connectDB = async ()=>{
+// const connectDB = async () => {
 //     try {
-//         mongoose.connection.on('connected', ()=> 
-//             console.log("Database Connected")
+//         // Attempt connection
+//         await mongoose.connect(`${process.env.MONGODB_URI}/quickblog`, {
+//             serverSelectionTimeoutMS: 30000, // Increased from default 10s to 30s
+//         });
+
+//         mongoose.connection.on('connected', () =>
+//             console.log(" Database Connected")
 //         );
-//         const conn = mongoose.connection;
-//         conn.once('open', () => {
+
+//         mongoose.connection.once('open', () => {
 //             console.log("MongoDB connection established successfully");
 //         });
-//         conn.once('error', () => {
-//             console.log("MongoDB connection not established ");
-//         }
-//         )
-//         await mongoose.connect(`${process.env.MONGODB_URI}/quickblog`)
-        
+
+//         mongoose.connection.on('error', (err) => {
+//             console.error("MongoDB connection error:", err);
+//         });
+
 //     } catch (error) {
-//         console.log(error.message);
+//         console.error("Initial connection error:", error.message);
 //     }
-// }
-// const mongoose = require('mongoose');
+// };
 
-const connectDB = async () => {
-    try {
-        // Attempt connection
-        await mongoose.connect(`${process.env.MONGODB_URI}/quickblog`, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 30000, // ⬅️ Increased from default 10s to 30s
-        });
 
-        mongoose.connection.on('connected', () =>
-            console.log("✅ Database Connected")
-        );
+let cached = global.mongoose;
 
-        mongoose.connection.once('open', () => {
-            console.log("✅ MongoDB connection established successfully");
-        });
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
-        mongoose.connection.on('error', (err) => {
-            console.error("MongoDB connection error:", err);
-        });
+export const connectDB = async () => {
+  if (cached.conn) return cached.conn;
 
-    } catch (error) {
-        console.error("Initial connection error:", error.message);
-    }
+  if (!cached.promise) {
+    const mongoose = await import('mongoose');
+    cached.promise = mongoose.default.connect(process.env.MONGODB_URI, {
+      dbName: 'quickblog',
+    });
+  }
+
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
-
-// module.exports = connectDB;
-
 export default connectDB
