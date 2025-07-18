@@ -256,4 +256,4 @@ export const footer_data = [
           title: "Follow Us",
           links: ["Instagram", "Twitter", "Facebook", "YouTube"]
       }
-  ];
+];

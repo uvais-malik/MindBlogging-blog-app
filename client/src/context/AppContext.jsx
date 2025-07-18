@@ -32,8 +32,14 @@ export const AppProvider = ({ children })=>{
         const localToken = localStorage.getItem('token')
         if(localToken){
             setToken(localToken)
-            axios.defaults.headers.common['Authorization'] = `${localToken}`;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${localToken}`;
         }
+        // if(localToken){
+        //     setToken(localToken)
+        //     axios.defaults.headers.common['Authorization'] = `${localToken}`;
+        // }
+
+
     },[])
 
     const value = {
