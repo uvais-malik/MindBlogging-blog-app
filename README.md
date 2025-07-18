@@ -1,1 +1,1 @@
-# QuickBlog
+#MindBLogging
